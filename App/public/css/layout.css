@@ -47,57 +47,6 @@ main {
   max-width: 500px;
 }
 
-/* --------------------- Navbar --------------------- */
-nav {
-  backdrop-filter: blur(7px);
-  background: rgba(0, 0, 0, 0.158);
-  border-bottom: 1px solid var(--glass-border);
-  padding: 0.5rem 2rem;
-  position: sticky;
-  z-index: 10;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-nav .container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-nav .brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--accent-color);
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-}
-
-nav .brand img {
-  width: 70px;
-  height: 50px;
-  margin-right: 1rem;
-}
-
-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  padding: 0;
-  margin: 0;
-}
-
-nav ul li a {
-  color: var(--text-color);
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  transition: background 0.3s ease;
-}
-
-nav ul li a:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
-}
 
 /* --------------------- Hero Section --------------------- */
 .hero {
@@ -344,66 +293,12 @@ form button[type="submit"]:hover {
   color: var(--text-color);
 }
 
-/* --------------------- Footer --------------------- */
-footer {
-  background: #141614;
-  padding: 0.2rem 2rem;
-  text-align: center;
-  color: white;
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--glass-border);
-}
-
-footer h3 {
-  margin-bottom: 0.9rem;
-}
-
-footer .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 0.1rem;
-}
-
-.footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  font-size: larger;
-}
-
-.footer-links a {
-  color: white;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
 .copyright {
   margin-top: 1rem;
   font-size: 0.9rem;
   opacity: 0.8;
 }
 
-/* --------------------- About Section --------------------- */
-.about {
-  width: 60%;
-  margin: auto;
-  margin-top: 3rem;
-  padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  border: 1px solid var(--glass-border);
-  color: var(--text-color);
-  text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 5%;
-  animation: zoomInSlideUp 0.7s ease-out forwards;
-  opacity: 0;
-  animation-delay: 0.1s;
-}
 
 /* --------------------- Create New Post Specific --------------------- */
 .newpost {
