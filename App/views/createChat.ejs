@@ -1,0 +1,16 @@
+<div class="form-container">
+    <h2>Create New Group Chat</h2>
+    <form action="/chat/create" method="POST">
+        <div class="form-group">
+            <label for="name">Chat Name</label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Enter chat name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="members">Members (User IDs separated by commas)</label>
+            <input type="text" name="members" id="members" class="form-control" placeholder="user1Id, user2Id, ..." required>
+        </div>
+
+        <button type="submit" class="btn">Create Chat</button>
+    </form>
+</div>

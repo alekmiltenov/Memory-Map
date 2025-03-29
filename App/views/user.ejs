@@ -1,0 +1,54 @@
+<section class="user-profile">
+    <div class="info-text">
+      <h1><strong><%= currentUser.displayName %></strong></h1>
+      <p><small>Email:</small> <%= currentUser.email %></p>
+      <p><small>Username:</small> <%= currentUser.username %></p>
+      <p><small>Joined:</small> <%= new Date(currentUser.createdAt).toLocaleDateString() %></p>
+      <hr>
+    </div>
+    
+    <!-- Edit Form -->
+    <form action="/user/<%= currentUser.id %>?_method=PATCH" method="POST" id="editForm" style="display:none;">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" class="form-control" name="username" value="<%= currentUser.username %>">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" class="form-control" name="email" value="<%= currentUser.email %>">
+      </div>
+      <div class="form-group">
+        <label for="displayName">Display Name</label>
+        <input id="displayName" class="form-control" name="displayName" value="<%= currentUser.displayName %>">
+      </div>
+      <div class="form-group" style="text-align: right;">
+        <button type="button" id="closeBtn" class="btn btn-accent">Cancel</button>
+        <button type="submit" class="btn btn-accent">Submit Changes</button>
+      </div>
+    </form>
+    
+    <div class="user-actions">
+      <a href="/user/<%= currentUser.id %>/posts/new" class="btn btn-accent">New post</a>
+      <button type="button" id="editBtn" class="btn btn-accent">Edit</button>
+      <form action="/user/<%= currentUser.id %>?_method=DELETE" method="POST" style="display:inline;">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+    
+    <script>
+      const editBtn = document.getElementById('editBtn');
+      const closeBtn = document.getElementById('closeBtn');
+      const editForm = document.getElementById('editForm');
+      
+      editBtn.addEventListener('click', () => {
+        editForm.style.display = 'block';
+        editBtn.style.display = 'none';
+      });
+      
+      closeBtn.addEventListener('click', () => {
+        editForm.style.display = 'none';
+        editBtn.style.display = 'inline-block';
+      });
+    </script>
+  </section>
+  
