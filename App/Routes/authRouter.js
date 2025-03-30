@@ -29,7 +29,7 @@ router.get('/google/callback',
       sameSite: "Strict",
       maxAge: 7200000, // 2 hour expiration
     });
-    res.redirect(`/user/${req.user.id}`);
+    res.redirect(`/`);
   }
 );
 

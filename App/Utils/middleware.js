@@ -8,7 +8,7 @@ function logger(req,res,next){
     next();
 };
 
-// # Check user JWT
+// # Check user JWT & ACCESSS
 const accessCheckJWT = (req, res, next) => {
     const token = req.cookies.jwt;
     if (!token){
@@ -18,6 +18,13 @@ const accessCheckJWT = (req, res, next) => {
     if (!decoded) return res.status(403).redirect('/'); 
     
     req.user = decoded;
+    
+    // Verified user access only to his own account
+    const id = parseInt(req.params.id);
+    if (req.user.id !== id) {
+      res.cookie('message', 'You do not have access to this account', { maxAge: 6000, httpOnly: true });
+      return res.redirect('/');
+    }
     next();
 };
 
