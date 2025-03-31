@@ -4,12 +4,11 @@ const router = express.Router();
 const User = require('../Schemas/userSchema'); 
 const bcrypt = require('bcrypt');
 
-const jwt = require('jsonwebtoken');
+
 const { createJWT } = require('../Utils/jwtUtils');
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const passport = require('passport');
-const session = require('express-session');
 require('../Utils/passportConfig');
 
 
@@ -18,18 +17,20 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 router.get('/google/callback', 
   passport.authenticate('google', { failureRedirect: '/auth/login'}),
+  
   async(req, res) => {
     const { id, username } = req.user;
     const token = createJWT(id, username);
 
-    // Send Token in a Cookie
-   await res.cookie("jwt", token, {
+    // # Send Token in a Cookie
+    res.cookie("jwt", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
       maxAge: 7200000, // 2 hour expiration
     });
-    res.redirect(`/`);
+    res.cookie('message', 'Google Login Successful', { maxAge: 6000, httpOnly: true });
+    res.redirect('/');
   }
 );
 
@@ -54,8 +55,8 @@ router.post('/login', async(req, res) => {
         // Find user and check for existence
         const currentUser = await User.findOne({username: username});
         if(!currentUser) {
-            res.cookie('message', 'Invalid User', { maxAge: 6000, httpOnly: true }); 
-            return res.redirect('/auth/login');
+        res.cookie('message', 'Invalid User', { maxAge: 6000, httpOnly: true }); 
+        return res.redirect('/auth/login');
         }
     
         // Password Check 
@@ -66,7 +67,7 @@ router.post('/login', async(req, res) => {
             const { id } = currentUser;
             const token = createJWT(id, username);
 
-            // Send Token in a Cookie
+            // # Send Token in a Cookie
             res.cookie("jwt", token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
@@ -74,9 +75,10 @@ router.post('/login', async(req, res) => {
                 maxAge: 7200000, // 2 hour expiration
             });
             
-            res.cookie('message', 'Login Successful', { maxAge: 6000, httpOnly: true }); 
-            return res.redirect(`/user/${currentUser.id}`);
+        res.cookie('message', 'Login Successful', { maxAge: 6000, httpOnly: true }); 
+        return res.redirect(`/user/${currentUser.id}`);
         }
+
         else{
             res.cookie('message', 'Invalid password', { maxAge: 6000, httpOnly: true });
             return res.redirect('/auth/login');
@@ -111,8 +113,8 @@ router.post('/signup', async(req, res) => {
         // # Already Existing User Check 
         const existingUser = await User.findOne({$or: [{username}, {email}]});
         if(existingUser) { 
-            res.cookie('message', `User ${existingUser.username} already exists`, { maxAge: 6000, httpOnly: true });
-            return res.redirect('/auth/signup');
+        res.cookie('message', `User ${existingUser.username} already exists`, { maxAge: 6000, httpOnly: true });
+        return res.redirect('/auth/signup');
         }
 
         // # Last Id check
@@ -127,16 +129,16 @@ router.post('/signup', async(req, res) => {
         const currentUser = new User({id: newId,username,email,displayName,password: hashedPassword});
         await currentUser.save();
 
-        // # Creating the JWT token
-        const {id} = currentUser;
-        const token = createJWT(id, username);
+            // # Creating the JWT token
+            const {id} = currentUser;
+            const token = createJWT(id, username);
 
-        res.cookie("jwt", token, {
-            httpOnly: true, 
-            secure: process.env.NODE_ENV === "production", 
-            sameSite: "Strict",
-            maxAge: 7200000,
-        });
+            res.cookie("jwt", token, {
+                httpOnly: true, 
+                secure: process.env.NODE_ENV === "production", 
+                sameSite: "Strict",
+                maxAge: 7200000,
+            });
 
         // # Redirect to User page
         res.cookie('message', 'Successfully Created An Account', { maxAge: 6000, httpOnly: true });

@@ -20,7 +20,7 @@
   </nav>
 
 <% if (locals.posts) { %>
-  <a href="/user/<%= currentUser.id %>/posts/new" class="btn btn-accent">New post</a>
+  <a href="/user/<%=currentUser.id%>/posts/new" class="btn btn-accent">New post</a>
   <div class="posts">
     <% locals.posts.forEach(post => { %>
       <div class="post">

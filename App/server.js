@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000;                          // # Define PORT
 //#-------------------------------------------------------MIDDLEWARE--------------------------------------------------------//#
 // .                                                                                                                        //#
 // # View engine, layouts, public setup                                                                                     //#
-app.set('view engine', 'ejs');                                  // # npm i ejs & Set EJS as view engine                     //
+app.set('view engine', 'ejs');                                  // # npm i ejs & Set EJS as view engine                     //#
 app.use(expressLayouts);                                        // # Use EJS Layouts                                        //#
 app.use(express.static('public'));                              // # Set public folder for static files                     //#
 // .                                                                                                                        //#
@@ -55,6 +55,7 @@ app.use('/user', UserRouter);                                   // # Use User Ro
 // #------------------------------------------------------------------------------------------------------------------------//#
 
 
+
 // + MongoDB connection -----------------------------------------------------------------------------------------------------//+
 mongoose.connect(process.env.MONGODB_URI)                                                                                   //+
 .then(() => console.log('Connection to DB: Established✅'))                                                                //+
@@ -62,40 +63,43 @@ mongoose.connect(process.env.MONGODB_URI)                                       
 // + ---------------------------------------------------------------------------------------------------------------------//+
 
 
+
 // # Home Page
 app.get('/', async (req, res) => {
-    try {
-      const { message } = req.cookies || {};                                                    // # Message managment
-      const token = req.cookies.jwt;                                                            // # Get token from cookies
+  try {
+    const { message } = req.cookies || {};                      // # Message managment
+    const token = req.cookies.jwt;                              // # Get token from cookies
 
-      // # If token exists
-      if (token) {
-        const decoded = verifyJWT(token); // We verify it and store the decoded info (id, username) into decoded
+    // # If token exists
+    if (token) {
+      const decoded = verifyJWT(token); // We verify it and store the decoded info (id, username) into decoded
 
-        // # If decoded ( token is valid and has value )
-        if (decoded) {
-          req.user = decoded; // Custom variabe user gets the value of decoded
-          const currentUser = await User.findOne({ id: decoded.id }); // we find it by the id we gave teh jwt token when we created it
+      // # If decoded ( token is valid and has value )
+      if (decoded) {
+        req.user = decoded; // Custom variabe user gets the value of decoded
+        const currentUser = await User.findOne({ id: decoded.id }); // we find it by the id we gave teh jwt token when we created it
 
-          // # If currentUser exists
-            if(currentUser){
-                const posts = await Post.find({ author : currentUser._id }).sort({ date : "desc"}); // find the posts with author our guy
-                return res.status(200).render('home', {message , currentUser , posts }); // render home with the data
-            }
-            else{
-                res.cookie('message', 'User doesnt exist', { maxAge: 6000, httpOnly: true });
-                return res.status(200).render('home', { message });
-            }
-        }
+        // # If currentUser exists
+        if(currentUser){
+          const posts = await Post.find({ author : currentUser._id }).sort({ date : "desc"}); // find the posts with author our guy
+          return res.status(200).render('home', {message , currentUser , posts }); // render home with the data
+          }
         else{
-            res.cookie('message', 'Unauthorized access', { maxAge: 6000, httpOnly: true });
-            return res.status(200).redirect('/');
-        }
+          res.cookie('message', 'User doesnt exist', { maxAge: 6000, httpOnly: true });
+          return res.status(200).render('home', { message });
+          }
       }
-      return res.status(200).render('home', { message });
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
+
+      else{
+        res.cookie('message', 'Unauthorized access', { maxAge: 6000, httpOnly: true });
+        return res.status(200).redirect('/');
+      }
     }
+
+    return res.status(200).render('home', { message });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 });
   
   

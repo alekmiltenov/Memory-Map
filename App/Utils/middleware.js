@@ -3,28 +3,21 @@ const jwt = require('jsonwebtoken');
 const User = require('../Schemas/userSchema'); // require the User Schema
 
 // # Log url and method
-function logger(req,res,next){
+function logger(req, res, next) {
     console.log(`${req.originalUrl} : ${req.method}`);
     next();
 };
 
-// # Check user JWT & ACCESSS
+// # Check user JWT
 const accessCheckJWT = (req, res, next) => {
     const token = req.cookies.jwt;
-    if (!token){
+    if (!token) {
         return res.status(401).redirect('/');
     }
     const decoded = verifyJWT(token);
     if (!decoded) return res.status(403).redirect('/'); 
-    
+
     req.user = decoded;
-    
-    // Verified user access only to his own account
-    const id = parseInt(req.params.id);
-    if (req.user.id !== id) {
-      res.cookie('message', 'You do not have access to this account', { maxAge: 6000, httpOnly: true });
-      return res.redirect('/');
-    }
     next();
 };
 
@@ -45,4 +38,4 @@ async function attachUser(req, res, next) {
   next();
 }
 
-module.exports = {accessCheckJWT , logger, attachUser};
+module.exports = { accessCheckJWT, logger, attachUser };
